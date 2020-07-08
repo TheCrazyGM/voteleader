@@ -11,7 +11,7 @@ from voteleader import db
 
 def update_db():
     uri = 'https://holybread.io/leaderboard_api/'
-    payload = {'type': 'leaderboard', 'amount': 500}
+    payload = {'type': 'leaderboard', 'amount': 160}
     r = requests.get(uri, data=json.dumps(payload))
     json_repsonse = r.json()
     table = db.create_table("leaderboard", primary_id="rank")
