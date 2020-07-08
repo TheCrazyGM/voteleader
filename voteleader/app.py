@@ -1,9 +1,7 @@
-import json
 import math
 from datetime import datetime, timedelta, timezone
 from pprint import pprint
 
-import dataset
 import requests
 from beem import Hive
 from beem.account import Account
@@ -11,12 +9,12 @@ from beem.blockchain import Blockchain
 from beem.comment import Comment
 from beem.utils import construct_authorperm
 
-hive = Hive(node='https://anyx.io')
+from voteleader import db, voter, wif
+
+hive = Hive(node='https://anyx.io', keys=wif)
 blockchain = Blockchain(blockchain_instance=hive)
 stream = blockchain.stream(
     opNames=['comment'], raw_ops=False, threading=True, thread_num=4)
-
-db = dataset.connect('sqlite:///holybread.db')
 
 
 def tally(author):
@@ -31,23 +29,10 @@ def tally(author):
     return count
 
 
-def create_db():
-    uri = 'https://holybread.io/leaderboard_api/'
-    payload = {'type': 'leaderboard', 'amount': 500}
-    r = requests.get(uri, data=json.dumps(payload))
-    json_repsonse = r.json()
-    table = db.create_table("leaderboard", primary_id="rank")
-    table.drop()
-
-    for player in json_repsonse:
-        table.insert(dict(user=player))
-    table.create_index('user')
-    db.commit()
-
-
 def monitor():
     table = db.load_table('leaderboard')
-    print("[Starting up...]")
+    vote_table = db['vote_history']
+    print("[Monitor Starting up...]")
     # Read the live stream and filter out only transfers
     for post in stream:
         try:
@@ -58,20 +43,23 @@ def monitor():
                         post['author'], post['permlink'])
                     c = Comment(perm, blockchain_instance=hive)
                     if c.is_main_post():
-                        print(f"[Post Found! By: {q['user']} Rank: {q['rank']}]")
-                        vote_weight = math.ceil(((150 - q['rank'])*3.3) / (tally(post['author'])))
-                        print(f"[{perm} -  Should be voted with a {vote_weight}% upvote.]")
+                        today = datetime.now(timezone.utc)
+                        week_tally = tally(post['author'])
+                        print(
+                            f"[Post Found! By: {q['user']} Rank: {q['rank']}]")
+                        vote_weight = math.ceil(
+                            ((150 - q['rank'])*3.3) / (week_tally))
+                        vote_weight = 100 if vote_weight >= 100 else vote_weight
+                        vote_weight = 1 if vote_weight <= 1 else vote_weight
+                        print(
+                            f"[{week_tally} post(s) a week. - {perm} should be voted with a {vote_weight}% upvote.]")
+                        tx = c.upvote(weight=vote_weight, voter=voter)
+                        pprint(tx)
+                        vote_table.insert(dict(
+                            user=q['user'], rank=q['rank'], post=perm, vote_weight=vote_weight, vote_time=today))
         except Exception as e:
             print(f'[Error: {e}]')
 
 
-def testing():
-    table = db.load_table('leaderboard')
-    q = table.find_one(rank=1)
-    print(q)
-
-
 if __name__ == "__main__":
-    create_db()
-    # testing()
     monitor()
