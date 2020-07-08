@@ -48,7 +48,7 @@ def monitor():
                         print(
                             f"[Post Found! By: {q['user']} Rank: {q['rank']}]")
                         vote_weight = math.ceil(
-                            ((150 - q['rank'])*3.3) / (week_tally))
+                            ((160 - q['rank'])*3.3) / (week_tally))
                         vote_weight = 100 if vote_weight >= 100 else vote_weight
                         vote_weight = 1 if vote_weight <= 1 else vote_weight
                         print(
