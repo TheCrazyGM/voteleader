@@ -1,4 +1,4 @@
-adm# Leaderboard Vote Utility
+# Leaderboard Vote Utility
 
 Very simple utility to vote based on leaderboard rank
 
