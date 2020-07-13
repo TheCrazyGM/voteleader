@@ -1,6 +1,6 @@
 import math
+import time
 from datetime import datetime, timedelta, timezone
-#from pprint import pprint
 
 import requests
 from beem import Hive
@@ -53,12 +53,13 @@ def monitor():
                         vote_weight = 1 if vote_weight <= 1 else vote_weight
                         print(
                             f"[{week_tally} post(s) a week. - {perm} should be voted with a {vote_weight}% upvote.]")
+                        time.sleep(90) # Trying to catch about the 4 minute mark for curation.
                         tx = c.upvote(weight=vote_weight, voter=voter)
                         reply_body = f"Your current Rank ({q['rank']}) in the battle Arena of Holybread has granted you an Upvote of {vote_weight}%"
-                        #pprint(tx)
+                        # print(tx)
                         reply_tx = c.reply(
                             reply_body, title="Leaderboard Vote", author=voter)
-                        #pprint(reply_tx)
+                        # print(reply_tx)
                         vote_table.insert(dict(
                             user=q['user'], rank=q['rank'], post=perm, vote_weight=vote_weight, vote_time=today))
         except Exception as e:
