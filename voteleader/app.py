@@ -53,7 +53,7 @@ def monitor():
                         vote_weight = 1 if vote_weight <= 1 else vote_weight
                         print(
                             f"[{week_tally} post(s) a week. - {perm} should be voted with a {vote_weight}% upvote.]")
-                        time.sleep(90) # Trying to catch about the 4 minute mark for curation.
+                        time.sleep(240) # Trying to catch about the 4 minute mark for curation.
                         tx = c.upvote(weight=vote_weight, voter=voter)
                         reply_body = f"Your current Rank ({q['rank']}) in the battle Arena of Holybread has granted you an Upvote of {vote_weight}%"
                         # print(tx)
