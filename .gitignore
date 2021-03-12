@@ -128,3 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 holybread.db
+.vscode/settings.json
