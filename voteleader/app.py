@@ -12,7 +12,8 @@ from beem.utils import construct_authorperm
 from voteleader import db, voter, wif
 
 
-nodes_urls = ['https://api.hive.blog', 'https://hived.privex.io', 'https://anyx.io']
+nodes_urls = ['https://api.hive.blog',
+              'https://hived.privex.io', 'https://anyx.io']
 hive = Hive(node=nodes_urls, keys=wif)
 blockchain = Blockchain(blockchain_instance=hive)
 stream = blockchain.stream(
@@ -31,6 +32,8 @@ def monitor():
     table = db.load_table('leaderboard')
     vote_table = db['vote_history']
     print("[Monitor Starting up...]")
+
+
 def monitor():
     table = db.load_table('leaderboard')
     vote_table = db['vote_history']
@@ -66,3 +69,7 @@ def monitor():
                         user=q['user'], rank=q['rank'], post=perm, vote_weight=vote_weight, vote_time=today))
         except Exception as e:
             print(f'[Error: {e}]')
+
+
+if __name__ == "__main__":
+    monitor()
