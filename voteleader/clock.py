@@ -10,8 +10,8 @@ from voteleader import db
 
 
 def update_db():
-    uri = 'https://holybread.io/leaderboard_api/'
-    payload = {'type': 'leaderboard', 'amount': 160}
+    uri = "https://holybread.io/leaderboard_api/"
+    payload = {"type": "leaderboard", "amount": 160}
     r = requests.get(uri, data=json.dumps(payload))
     json_repsonse = r.json()
     table = db.create_table("leaderboard", primary_id="rank")
@@ -19,8 +19,8 @@ def update_db():
 
     for player in json_repsonse:
         table.insert(dict(user=player))
-    table.create_index('user')
-    print(f'[Leaderboard Database updated at {datetime.now()}]')
+    table.create_index("user")
+    print(f"[Leaderboard Database updated at {datetime.now()}]")
     db.commit()
 
 
