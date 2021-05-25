@@ -12,7 +12,11 @@ from beem.utils import construct_authorperm
 from voteleader import db, voter, wif
 
 
-nodes_urls = ["https://api.deathwing.me", "https://hived.privex.io", "https://anyx.io"]
+nodes_urls = [
+    "https://api.hive.blog",
+    "https://api.deathwing.me",
+    "https://hived.privex.io",
+]
 hive = Hive(node=nodes_urls, keys=wif)
 blockchain = Blockchain(blockchain_instance=hive)
 stream = blockchain.stream(
