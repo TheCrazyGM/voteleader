@@ -47,7 +47,7 @@ def monitor():
     print("[Monitor Starting up...]")
     # Read the live stream and filter out only transfers
     for post in stream:
-        print(post('block_num')) # Debugin purposes
+        print(post["block_num"])
         try:
             q = table.find_one(user=post["author"])
             if q is not None and post["author"] == q["user"]:
