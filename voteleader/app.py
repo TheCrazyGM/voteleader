@@ -18,6 +18,9 @@ nodes_urls = [
     "https://hived.privex.io",
 ]
 hive = Hive(node=nodes_urls, keys=wif)
+hive.chain_params[
+    "chain_id"
+] = "beeab0de00000000000000000000000000000000000000000000000000000000"
 blockchain = Blockchain(blockchain_instance=hive)
 stream = blockchain.stream(
     opNames=["comment"], raw_ops=False, threading=True, thread_num=4
