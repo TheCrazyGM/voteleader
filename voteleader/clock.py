@@ -10,14 +10,19 @@ from voteleader import db
 
 
 def update_db():
-    uri = "https://holybread.io/leaderboard_api/"
+    """uri = "https://holybread.io/leaderboard_api/"
     payload = {"type": "leaderboard", "amount": 160}
     r = requests.get(uri, data=json.dumps(payload))
     json_repsonse = r.json()
+    """
     table = db.create_table("leaderboard", primary_id="rank")
     table.drop()
+    with open(
+        "whitelist.json"
+    ) as f:  # Very bad hackjob to temporarly add a working database
+        data = json.load(f)
 
-    for player in json_repsonse:
+    for player in data:
         table.insert(dict(user=player))
     table.create_index("user")
     print(f"[Leaderboard Database updated at {datetime.now()}]")

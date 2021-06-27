@@ -18,9 +18,6 @@ nodes_urls = [
     "https://hived.privex.io",
 ]
 hive = Hive(node=nodes_urls, keys=wif)
-hive.chain_params[
-    "chain_id"
-] = "beeab0de00000000000000000000000000000000000000000000000000000000"
 blockchain = Blockchain(blockchain_instance=hive)
 stream = blockchain.stream(
     opNames=["comment"], raw_ops=False, threading=True, thread_num=4
@@ -47,7 +44,7 @@ def monitor():
     print("[Monitor Starting up...]")
     # Read the live stream and filter out only transfers
     for post in stream:
-        print(post["block_num"])
+        # print(post["block_num"])
         try:
             q = table.find_one(user=post["author"])
             if q is not None and post["author"] == q["user"]:
@@ -57,16 +54,16 @@ def monitor():
                     today = datetime.now(timezone.utc)
                     week_tally = tally(post["author"])
                     print(f"[Post Found! By: {q['user']} Rank: {q['rank']}]")
-                    vote_weight = math.ceil(((160 - q["rank"]) * 2.5) / (week_tally))
+                    vote_weight = math.ceil(((65 - q["rank"]) * 2.5) / (week_tally))
                     vote_weight = 100 if vote_weight >= 100 else vote_weight
                     vote_weight = 1 if vote_weight <= 1 else vote_weight
                     print(
                         f"[{week_tally} post(s) a week. - {perm} should be voted with a {vote_weight}% upvote.]"
                     )
-                    # Trying to catch about the 4 minute mark for curation.
-                    time.sleep(240)
+                    # Trying to catch about the mark for curation.
+                    time.sleep(60)
                     tx = c.upvote(weight=vote_weight, voter=voter)
-                    reply_body = f"Your current Rank ({q['rank']}) in the battle Arena of Holybread has granted you an Upvote of {vote_weight}%"
+                    reply_body = f"Thank you for supporting Holybread and Thunkgaria over the last year! Enjoy your upvote -simplegame"
                     # print(tx)
                     reply_tx = c.reply(
                         reply_body, title="Leaderboard Vote", author=voter
