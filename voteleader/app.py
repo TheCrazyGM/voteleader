@@ -2,7 +2,6 @@ import math
 import time
 from datetime import datetime, timedelta, timezone
 
-import requests
 from beem import Hive
 from beem.account import Account
 from beem.blockchain import Blockchain
@@ -29,12 +28,6 @@ def tally(author):
     acc = Account(author, blockchain_instance=hive)
     blog = acc.get_blog()
     return 1 + sum(post["created"] >= one_week for post in blog)
-
-
-def monitor():
-    table = db.load_table("leaderboard")
-    vote_table = db["vote_history"]
-    print("[Monitor Starting up...]")
 
 
 def monitor():
