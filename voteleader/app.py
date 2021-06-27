@@ -14,7 +14,6 @@ from voteleader import db, voter, wif
 
 nodes_urls = [
     "https://api.hive.blog",
-    "https://api.deathwing.me",
     "https://hived.privex.io",
 ]
 hive = Hive(node=nodes_urls, keys=wif)
